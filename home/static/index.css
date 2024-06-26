@@ -1,0 +1,14 @@
+.student-card{
+    display: flex;
+    border: 1px solid rgba(193, 193, 193, 0.5);
+    border-radius: 15px;
+    box-shadow: 0px 0px 8px rgba(193, 193, 193, 0.5);
+}
+.img-wrapper, .img-wrapper > img  {
+    width: 150px;
+    height: 150px;
+    border-radius: 12px;
+}
+.img-upload-wrapper{
+    width:50%;
+}

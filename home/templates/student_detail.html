@@ -1,0 +1,85 @@
+{% extends "base.html" %} {% load static %} {% load widget_tweaks %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'index.css' %}" />
+<div class="container">
+    <h3 class="text-center">Detail Page</h3>
+    <div>
+        <div class="student-card mb-3 p-2">
+            <div class="img-wrapper me-3">
+                <img src="{{ student.image_url }}" alt="{{ student.name}}" loading="lazy" />
+            </div>
+            <div class="info-wrapper">
+                <div>Name: <b>{{ student.name}}</b></div>
+                <div>Age: {{ student.age }}</div>
+                <div>Phone: {{ student.phone_no }}</div>
+                <div>Email: {{ student.email }}</div>
+                <div>
+                    <a id="deleteBtn" class="btn btn-danger mt-2" role="button">Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="img-upload-wrapper">
+    <form action="{% url 'student' %}" method="patch" enctype="multipart/form-data">
+        {% for field in form.visible_fields %}
+        {% render_field field class='form-control' %}
+        {% endfor %}
+        <button type="submit" class="btn btn-warning mt-3">Update</button>
+    </form>
+</div>
+</div>
+<!-- <script src="{% static 'student_detail.js' %}"></script> -->
+ <script>
+    const a=35;
+    const checkboxInput = document.querySelector('input[id="image-clear_id"]');
+    const checkboxLabel = document.querySelector('label[for="image-clear_id"]');
+    if (checkboxInput){
+        checkboxInput.style.display = 'none';
+        checkboxLabel.style.display = 'none';
+    }
+
+    const form = document.querySelector('form');
+    const submitURL = form.getAttribute('action') + "?id={{ student.id }}";
+    const fileInput = document.querySelector('input[type="file"]');
+    
+    const deleteBtn = document.querySelector('#deleteBtn');
+
+    form.addEventListener('submit', (e)=>{
+        e.preventDefault();
+        if (fileInput.value != ''){
+            let formData = new FormData();
+            formData.append('image', fileInput.files[0]);
+            fetch(submitURL,{
+                method:"PATCH",
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                fileInput.value = '';
+                if ('data' in data){
+                    alert('Image updated successfully\nRefresh the page for updated content.');
+                }else{
+                    alert('something went wrong !!!');
+                }
+            })
+        }else{
+            console.log("file is empty.");
+        }
+    });
+
+    deleteBtn.addEventListener('click', (e)=>{
+        fetch("{% url 'student' %}?id={{ student.id }}",{
+                method:"DELETE",
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data['message'] = "Student record Deleted"){
+                    alert('record deleted.');
+                    window.location.href = "{% url 'home' %}";
+                }
+            })
+        });
+ </script>
+{% endblock content %}

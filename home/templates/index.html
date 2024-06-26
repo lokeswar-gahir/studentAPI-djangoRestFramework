@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'index.css' %}">
+<div class="container">
+    <h3 class="text-center">Welcome</h3>
+    <hr>
+    <p>
+        <a href="{% url 'student-form' %}">Add a Student</a>
+    </p>
+    <div>
+      {% if students %}
+          
+        {% for student in students %}
+          <div class="student-card mb-3 p-3">
+              <div class="img-wrapper me-3"><img src="{{ student.image_url }}" alt="{{ student.name}}" loading="lazy"></div>
+              <div class="info-wrapper">
+                <div>Name: <b>{{ student.name}}</b></div>
+                <div>Age: {{ student.age }}</div>
+                <div>Phone: {{ student.phone_no }}</div>
+                <div>Email: {{ student.email }}</div>
+                <div>Address: {{ student.address }}</div>
+                <div>
+                  <a class="btn btn-primary mt-2" href="{% url 'student-detail' pk=student.id %}" role="button">Detail</a>
+                </div>
+              </div>
+              
+          </div>
+        {% endfor %}
+        {% else %}
+        <p><b>No student records are available.</b></p>
+        {% endif %}
+    </div>
+    
+</div>
+{% endblock content %}
